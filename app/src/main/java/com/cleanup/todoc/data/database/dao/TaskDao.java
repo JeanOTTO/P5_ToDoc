@@ -8,8 +8,8 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Update;
 
-import com.cleanup.todoc.data.database.entity.Task;
-import com.cleanup.todoc.data.database.entity.TaskWithProject;
+import com.cleanup.todoc.data.database.entities.Task;
+import com.cleanup.todoc.data.database.entities.TaskWithProject;
 
 import java.util.List;
 
