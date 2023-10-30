@@ -7,7 +7,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.cleanup.todoc.data.database.entity.Project;
+import com.cleanup.todoc.data.database.entities.Project;
 
 import java.util.List;
 
