@@ -1,12 +1,17 @@
 package com.cleanup.todoc.data.database.entities;
 
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import java.util.Date;
 import java.util.Objects;
 
-@Entity(tableName = "tasks")
+@Entity(tableName = "tasks", foreignKeys = @ForeignKey(entity = Project.class,
+        parentColumns = "id",
+        childColumns = "projectId",
+        onDelete = ForeignKey.CASCADE))
+//FOREIGN KEY
 public class Task {
     @PrimaryKey(autoGenerate = true)
     private long id;

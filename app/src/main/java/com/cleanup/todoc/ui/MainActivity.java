@@ -1,38 +1,24 @@
 package com.cleanup.todoc.ui;
-
-import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import com.cleanup.todoc.R;
 import com.cleanup.todoc.data.database.entities.Project;
 import com.cleanup.todoc.data.database.entities.Task;
 import com.cleanup.todoc.data.database.entities.TaskWithProject;
 import com.cleanup.todoc.databinding.ActivityMainBinding;
 import com.cleanup.todoc.databinding.DialogAddTaskBinding;
-import com.cleanup.todoc.di.DI;
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private TasksAdapter taskAdapter;
@@ -62,13 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
         taskViewModel.getAllTasks().observe(this, tasks -> {
             mTasks=tasks;
-            if (tasks.size() == 0) {
-                viewBinding.lblNoTask.setVisibility(View.VISIBLE);
-                viewBinding.listTasks.setVisibility(View.GONE);
-            } else {
-                viewBinding.lblNoTask.setVisibility(View.GONE);
-                viewBinding.listTasks.setVisibility(View.VISIBLE);
-                taskAdapter.setTaskList(mTasks);}
+            updateTasks(mTasks);
+
         });
 
         viewBinding.fabAddTask.setOnClickListener(new View.OnClickListener() {
@@ -77,11 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 showAddTaskDialog();
             }
         });
-
     }
-
-
-
 
     private void showAddTaskDialog() {
         dialogAddTask();
@@ -158,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void updateTasks(List<TaskWithProject> tasks) {
-
         if (tasks.size() == 0) {
             viewBinding.lblNoTask.setVisibility(View.VISIBLE);
             viewBinding.listTasks.setVisibility(View.GONE);
@@ -166,12 +142,10 @@ public class MainActivity extends AppCompatActivity {
             viewBinding.lblNoTask.setVisibility(View.GONE);
             viewBinding.listTasks.setVisibility(View.VISIBLE);
 
-
-
-            taskAdapter.setTaskList(taskViewModel.sortTasks(mTasks, mSortTasks));
-
+            taskAdapter.setTaskList(Utils.sortTasks(mTasks, mSortTasks));
         }
     }
-
+    //viewmodel doit renvoyer que des livedata a l'activity
+    //methode statique dans class util
 }
 

@@ -27,7 +27,7 @@ public class TaskViewModel extends AndroidViewModel {
     private LiveData<List<Task>> allTasks;
     private LiveData<List<Project>> allProjects;
     private MutableLiveData<SortTasks> mutableTaskWithProject = new MutableLiveData<>();
-    //public LiveData<List<TaskWithProject>> taskWithProject = mutableTaskWithProject;
+
     public LiveData<List<TaskWithProject>> taskWithProjectObs;
 
     public TaskViewModel(Application application) {
@@ -62,28 +62,6 @@ public class TaskViewModel extends AndroidViewModel {
         executor.execute(() -> {
             taskRepository.deleteTask(taskWithProject.task);
         });
-    }
-
-    public List<TaskWithProject> sortTasks(List<TaskWithProject> tasksList, SortTasks mSortTasks) {
-        //List<TaskWithProject> tasks = taskWithProject.getValue();
-        if (tasksList != null) {
-
-            switch (mSortTasks) {
-                case ALPHABETICAL:
-                    Collections.sort(tasksList, new TaskAZComparator());
-                    break;
-                case ALPHABETICAL_INVERTED:
-                    Collections.sort(tasksList, new TaskZAComparator());
-                    break;
-                case RECENT_FIRST:
-                    Collections.sort(tasksList, new TaskOldComparator());
-                    break;
-                case OLD_FIRST:
-                    Collections.sort(tasksList, new TaskRecentComparator());
-                    break;
-        }
-    }
-        return tasksList;
     }
 
     /**
