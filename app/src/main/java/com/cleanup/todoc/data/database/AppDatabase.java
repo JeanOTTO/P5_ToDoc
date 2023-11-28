@@ -55,12 +55,10 @@ public abstract class AppDatabase extends RoomDatabase {
                 long projectIdB = database.projectDao().insertProject(new Project("Projet Lucidia", 0xFFB4CDBA));
                 long projectIdC = database.projectDao().insertProject(new Project("Projet Circus", 0xFFA3CED2));
 
-                database.taskDao().insertTask(new Task(projectIdA, "Tâche 1 pour Projet A", new Date()));
-                database.taskDao().insertTask(new Task(projectIdB, "Tâche 1 pour Projet B", new Date()));
-                database.taskDao().insertTask(new Task(projectIdC, "Tâche 1 pour Projet C", new Date()));
-                database.taskDao().insertTask(new Task(projectIdB, "Tâche 2 pour Projet B", new Date()));
-
-
+                database.taskDao().insertTask(new Task(projectIdA, "Balayer", new Date()));
+                database.taskDao().insertTask(new Task(projectIdB, "Nettoyer", new Date()));
+                database.taskDao().insertTask(new Task(projectIdC, "Lustrer", new Date()));
+                database.taskDao().insertTask(new Task(projectIdB, "Aspirer", new Date()));
             }
         });
     }

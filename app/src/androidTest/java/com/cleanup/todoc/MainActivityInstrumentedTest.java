@@ -1,26 +1,37 @@
 package com.cleanup.todoc;
 
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-import android.support.v7.widget.RecyclerView;
+
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+
+
+import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
+import com.cleanup.todoc.data.database.AppDatabase;
 import com.cleanup.todoc.ui.MainActivity;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.cleanup.todoc.TestUtils.withRecyclerView;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
+
+
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.runner.AndroidJUnit4;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -30,8 +41,14 @@ import static org.junit.Assert.assertThat;
  */
 @RunWith(AndroidJUnit4.class)
 public class MainActivityInstrumentedTest {
-    @Rule
-    public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class);
+/*    @Rule
+    public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class);*/
+
+   @Rule
+    public MemoryDbActivityRule rule = new MemoryDbActivityRule(MainActivity.class);
+
+
+
 
     @Test
     public void addAndRemoveTask() {

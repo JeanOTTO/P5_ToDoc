@@ -2,6 +2,9 @@ package com.cleanup.todoc.di;
 
 import android.content.Context;
 
+import androidx.room.Room;
+import androidx.test.core.app.ApplicationProvider;
+
 import com.cleanup.todoc.data.database.AppDatabase;
 import com.cleanup.todoc.data.database.dao.ProjectDao;
 import com.cleanup.todoc.data.database.dao.TaskDao;
@@ -18,19 +21,26 @@ public class DI {
     private static ProjectRepository projectRepository;
     private static TaskRepository taskRepository;
 
+    public static boolean inMemoryDatabase = false;
+
     public static void initialize(Context appContext) {
         context = appContext;
     }
 
     public static AppDatabase getAppDatabase() {
         if (appDatabase == null) {
-            appDatabase = AppDatabase.getInstance(context);
+            if (inMemoryDatabase){
+                Context contextTe = ApplicationProvider.getApplicationContext();
+                appDatabase = Room.inMemoryDatabaseBuilder(contextTe, AppDatabase.class)
+                        .allowMainThreadQueries()
+                        .build();
+            }else{
+                appDatabase = AppDatabase.getInstance(context);
+            }
         }
+
         return appDatabase;
     }
-    // a supprimer
-
-
 
     public static ProjectDao getProjectDao() {
         if (projectDao == null) {
@@ -58,5 +68,9 @@ public class DI {
             taskRepository = new TaskRepository(getTaskDao());
         }
         return taskRepository;
+    }
+
+    public static void setInMemoryDB(boolean b) {
+        inMemoryDatabase = b;
     }
 }

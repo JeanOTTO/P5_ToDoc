@@ -1,13 +1,15 @@
 package com.cleanup.todoc;
 
-import android.support.annotation.IdRes;
-import android.support.test.espresso.PerformException;
-import android.support.test.espresso.UiController;
-import android.support.test.espresso.ViewAction;
-import android.support.test.espresso.matcher.ViewMatchers;
-import android.support.test.espresso.util.HumanReadables;
-import android.support.v7.widget.RecyclerView;
+
 import android.view.View;
+
+import androidx.annotation.IdRes;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.test.espresso.PerformException;
+import androidx.test.espresso.UiController;
+import androidx.test.espresso.ViewAction;
+import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.espresso.util.HumanReadables;
 
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
@@ -30,8 +32,7 @@ public class TestUtils {
     }
 
     private static final class ActionOnItemViewAtPositionViewAction<VH extends RecyclerView
-            .ViewHolder>
-            implements
+            .ViewHolder>            implements
 
             ViewAction {
         private final int position;
@@ -58,6 +59,7 @@ public class TestUtils {
                     + " on item at position: "
                     + this.position;
         }
+
 
         public void perform(UiController uiController, View view) {
             RecyclerView recyclerView = (RecyclerView) view;

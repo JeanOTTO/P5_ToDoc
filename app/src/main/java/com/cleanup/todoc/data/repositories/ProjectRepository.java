@@ -14,18 +14,6 @@ public class ProjectRepository {
         this.projectDao = projectDao;
     }
 
-    public long insertProject(Project project) {
-        return projectDao.insertProject(project);
-    }
-
-    public void updateProject(Project project) {
-        projectDao.updateProject(project);
-    }
-
-    public void deleteProject(Project project) {
-        projectDao.deleteProject(project);
-    }
-
     public LiveData<List<Project>> getAllProjects() {
         return projectDao.getAllProjects();
     }
