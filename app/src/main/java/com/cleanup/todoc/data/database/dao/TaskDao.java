@@ -9,7 +9,6 @@ import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.cleanup.todoc.data.database.entities.Task;
-import com.cleanup.todoc.data.database.entities.TaskWithProject;
 
 import java.util.List;
 
@@ -29,10 +28,8 @@ public interface TaskDao {
 
     @Query("SELECT * FROM tasks WHERE projectId = :projectId")
     LiveData<List<Task>> getTasksForProject(int projectId);
+
     @Query("SELECT * FROM tasks")
     LiveData<List<Task>> getAllTasks();
 
-    @Transaction
-    @Query("SELECT * FROM tasks")
-    LiveData<List<TaskWithProject>> getTasksWithProjects();
 }

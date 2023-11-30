@@ -34,7 +34,6 @@ public abstract class AppDatabase extends RoomDatabase {
         }
         return instance;
     }
-
     private static Callback roomCallback = new Callback() {
         @Override
         public void onCreate(SupportSQLiteDatabase db) {
@@ -42,23 +41,22 @@ public abstract class AppDatabase extends RoomDatabase {
             insertDefaultTasks();
         }
     };
-
-
     private static void insertDefaultTasks() {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-
                 AppDatabase database = instance;
 
-                long projectIdA = database.projectDao().insertProject(new Project("Projet Tartampion", 0xFFEADAD1));
-                long projectIdB = database.projectDao().insertProject(new Project("Projet Lucidia", 0xFFB4CDBA));
-                long projectIdC = database.projectDao().insertProject(new Project("Projet Circus", 0xFFA3CED2));
+                //Projects
+                long project1 = database.projectDao().insertProject(new Project(ProjectsName.PROJET_1.getName(), ProjectsName.PROJET_1.getColor()));
+                long project2 = database.projectDao().insertProject(new Project(ProjectsName.PROJET_2.getName(), ProjectsName.PROJET_2.getColor()));
+                long project3 = database.projectDao().insertProject(new Project(ProjectsName.PROJET_3.getName(), ProjectsName.PROJET_3.getColor()));
 
-                database.taskDao().insertTask(new Task(projectIdA, "Balayer", new Date()));
-                database.taskDao().insertTask(new Task(projectIdB, "Nettoyer", new Date()));
-                database.taskDao().insertTask(new Task(projectIdC, "Lustrer", new Date()));
-                database.taskDao().insertTask(new Task(projectIdB, "Aspirer", new Date()));
+                //Tasks examples
+                database.taskDao().insertTask(new Task(project1, "Balayer", new Date()));
+                database.taskDao().insertTask(new Task(project2, "Nettoyer", new Date()));
+                database.taskDao().insertTask(new Task(project3, "Lustrer", new Date()));
+                database.taskDao().insertTask(new Task(project2, "Aspirer", new Date()));
             }
         });
     }

@@ -7,11 +7,10 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import com.cleanup.todoc.data.database.entities.Project;
 import com.cleanup.todoc.data.database.entities.Task;
-import com.cleanup.todoc.data.database.entities.TaskWithProject;
 import com.cleanup.todoc.data.repositories.ProjectRepository;
 import com.cleanup.todoc.data.repositories.TaskRepository;
 import com.cleanup.todoc.di.DI;
-import java.util.Comparator;
+
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -22,7 +21,6 @@ public class TaskViewModel extends AndroidViewModel {
     private final Executor executor = Executors.newSingleThreadExecutor();
     private LiveData<List<Task>> allTasks;
     private LiveData<List<Project>> allProjects;
-    public LiveData<List<TaskWithProject>> taskWithProjectObs;
 
     public TaskViewModel(Application application) {
         super(application);
@@ -32,16 +30,13 @@ public class TaskViewModel extends AndroidViewModel {
         projectRepository = DI.getProjectRepository();
         allProjects = projectRepository.getAllProjects();
         allTasks = taskRepository.getAllTasks();
-        taskWithProjectObs = taskRepository.getAllTasksWithProjects();
     }
 
     @NonNull
-    public LiveData<List<TaskWithProject>> getAllTasks() {
-
-        return taskWithProjectObs;
+    public LiveData<List<Task>> getAllTasks() {
+        return allTasks;
     }
-
-
+    @NonNull
     public LiveData<List<Project>> getAllProjects() {
         return allProjects;
     }
@@ -52,14 +47,10 @@ public class TaskViewModel extends AndroidViewModel {
         });
     }
 
-    public void deleteTask(TaskWithProject taskWithProject) {
+    public void deleteTask(Task task) {
         executor.execute(() -> {
-            taskRepository.deleteTask(taskWithProject.task);
+            taskRepository.deleteTask(task);
         });
     }
-
-    /**
-     * Comparator to sort task from A to Z
-     */
 
 }

@@ -15,7 +15,6 @@ import java.util.Objects;
 public class Task {
     @PrimaryKey(autoGenerate = true)
     private long id;
-
     private long projectId;
     private String name;
     private Date createdAt;
@@ -26,7 +25,6 @@ public class Task {
         this.name = name;
         this.createdAt = createdAt;
     }
-
 
     public long getId() {
         return id;

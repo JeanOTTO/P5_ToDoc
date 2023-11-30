@@ -10,16 +10,13 @@ public class Project {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
-
     private String name;
     private int color;
-
 
     public Project(String name, int color) {
         this.name = name;
         this.color = color;
     }
-
 
     public int getId() {
         return id;
@@ -28,7 +25,6 @@ public class Project {
     public String getName() {
         return name;
     }
-
     public int getColor() {
         return color;
     }

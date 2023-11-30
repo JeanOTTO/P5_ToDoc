@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.cleanup.todoc.R;
 import com.cleanup.todoc.data.database.entities.Project;
 import com.cleanup.todoc.data.database.entities.Task;
-import com.cleanup.todoc.data.database.entities.TaskWithProject;
 import com.cleanup.todoc.databinding.ActivityMainBinding;
 import com.cleanup.todoc.databinding.DialogAddTaskBinding;
 import java.util.Date;
@@ -23,10 +22,11 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private TasksAdapter taskAdapter;
     private TaskViewModel taskViewModel;
-    private android.app.AlertDialog dialog;
+    private android.app.AlertDialog addListdialog;
     private DialogAddTaskBinding binding;
     private ActivityMainBinding viewBinding;
-    private List<TaskWithProject> mTasks;
+    private List<Task> mTasks;
+    private List<Project> mProject;
     @NonNull
     private SortTasks mSortTasks = SortTasks.NONE;
 
@@ -38,19 +38,18 @@ public class MainActivity extends AppCompatActivity {
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
         taskAdapter = new TasksAdapter(new TasksAdapter.OnDeleteTaskClickListener() {
             @Override
-            public void onDeleteTaskClick(TaskWithProject task) {
+            public void onDeleteTaskClick(Task task) {
                 taskViewModel.deleteTask(task);
             }
         });
+
         viewBinding.listTasks.setLayoutManager(new LinearLayoutManager(this));
         viewBinding.listTasks.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
         viewBinding.listTasks.setAdapter(taskAdapter);
 
-        taskViewModel.getAllTasks().observe(this, tasks -> {
-            mTasks=tasks;
-            updateTasks(mTasks);
-
-        });
+        //LiveData
+        taskViewModel.getAllTasks().observe(this, this::updateTasks);
+        taskViewModel.getAllProjects().observe(this, this::updateProjects);
 
         viewBinding.fabAddTask.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,52 +58,42 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
     private void showAddTaskDialog() {
-        dialogAddTask();
-    }
-
-    public void dialogAddTask() {
         LayoutInflater inflater = LayoutInflater.from(this);
         binding = DialogAddTaskBinding.inflate(inflater);
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
         builder.setView(binding.getRoot());
         builder.setTitle(R.string.add_task);
         builder.setPositiveButton(R.string.add, null);
-        dialog = builder.create();
+        addListdialog = builder.create();
         populateProjectSpinner();
-        show();
+        addListDialogShow();
     }
-
     private void onPositiveButtonClick(){
         String taskName = binding.txtTaskName.getText().toString().trim();
         int projectId = ((Project) binding.projectSpinner.getSelectedItem()).getId();
 
         if (!taskName.isEmpty()) {
-            Task task = new Task(projectId,taskName,new Date());
+            Task task = new Task(projectId, taskName, new Date());
             taskViewModel.insertTask(task);
-            dismiss();
+            addListDialogDismiss();
         } else {
-            binding.txtTaskName.setError("Veuillez saisir un nom de tâche valide");
+            binding.txtTaskName.setError(getString(R.string.empty_task_name));
         }
     }
     private void populateProjectSpinner() {
-        taskViewModel.getAllProjects().observe((LifecycleOwner) this, projects -> {
-
-            ProjectNameAdapter projectNameAdapter = new ProjectNameAdapter(this, projects);
-
-            binding.projectSpinner.setAdapter(projectNameAdapter);
-        });
+        ProjectNameAdapter projectNameAdapter = new ProjectNameAdapter(this, mProject);
+        binding.projectSpinner.setAdapter(projectNameAdapter);
     }
 
-    public void show() {
-        dialog.show();
-        Button button = dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE);
+    public void addListDialogShow() {
+        addListdialog.show();
+        Button button = addListdialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE);
         button.setOnClickListener(view -> onPositiveButtonClick());
     }
 
-    public void dismiss() {
-        dialog.dismiss();
+    public void addListDialogDismiss() {
+        addListdialog.dismiss();
     }
 
     @Override
@@ -128,13 +117,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         updateTasks(mTasks);
-
         return super.onOptionsItemSelected(item);
     }
 
-
-
-    private void updateTasks(List<TaskWithProject> tasks) {
+    private void updateTasks(List<Task> tasks) {
+        mTasks = tasks;
         if (tasks.size() == 0) {
             viewBinding.lblNoTask.setVisibility(View.VISIBLE);
             viewBinding.listTasks.setVisibility(View.GONE);
@@ -142,10 +129,13 @@ public class MainActivity extends AppCompatActivity {
             viewBinding.lblNoTask.setVisibility(View.GONE);
             viewBinding.listTasks.setVisibility(View.VISIBLE);
 
-            taskAdapter.setTaskList(Utils.sortTasks(mTasks, mSortTasks));
+            taskAdapter.setTaskList(Utils.sortTasks(tasks, mSortTasks));
         }
     }
-    //viewmodel doit renvoyer que des livedata a l'activity
-    //methode statique dans class util
+
+    private void updateProjects(List<Project> projects) {
+        mProject = projects;
+        taskAdapter.setProjects(projects);
+    }
 }
 

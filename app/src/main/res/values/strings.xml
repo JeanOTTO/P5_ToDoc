@@ -14,6 +14,6 @@
     <string name="no_task">Tu n’as aucune tâche à traiter</string>
 
     <string name="task_name_hint">Nom de la tâche</string>
-
+    <string name="project">Project</string>
     <string name="empty_task_name">Le nom de la tâche doit être renseigné</string>
 </resources>
